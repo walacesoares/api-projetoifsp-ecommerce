@@ -4,36 +4,41 @@ import (
 	"api/src/banco"
 	"api/src/models"
 	"api/src/repositories"
+	"api/src/respostas"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 func CriarCliente(w http.ResponseWriter, r *http.Request) {
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
-		log.Fatal(erro)
+		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
+		return
 	}
 
 	var cliente models.Cliente
 	if erro = json.Unmarshal(corpoRequest, &cliente); erro != nil {
-		log.Fatal(erro)
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
 	}
 
 	db, erro := banco.Conectar()
 	if erro != nil {
-		log.Fatal(erro)
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
 	}
+
+	defer db.Close()
 
 	repository := repositories.NovoRepositorioDeClientes(db)
-	clienteId, erro := repository.Criar(cliente)
+	cliente.IDCliente, erro = repository.Criar(cliente)
 	if erro != nil {
-		log.Fatal(erro)
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
 	}
 
-	w.Write([]byte(fmt.Sprintf("Id inserido: %d", clienteId)))
+	respostas.JSON(w, http.StatusCreated, cliente)
 }
 
 func BuscarClientes(w http.ResponseWriter, r *http.Request) {
