@@ -21,7 +21,7 @@ var rotasCliente = []Rota{
 	{
 		URI:                "/clientes/{clienteId}",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarClientes,
+		Funcao:             controllers.BuscarCliente,
 		RequerAutenticacao: false,
 	},
 	{

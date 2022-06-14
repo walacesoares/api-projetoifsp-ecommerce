@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func CriarCliente(w http.ResponseWriter, r *http.Request) {
+func CriarOrdemServico(w http.ResponseWriter, r *http.Request) {
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
@@ -46,28 +46,18 @@ func CriarCliente(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusCreated, cliente)
 }
 
-func BuscarClientes(w http.ResponseWriter, r *http.Request) {
-	// nomeOuNick := strings.ToLower(r.URL.Query().Get("cliente"))
-
-	// db, erro := banco.Conectar()
-	// if erro != nil {
-	// 	respostas.Erro(w, http.StatusInternalServerError, erro)
-	// 	return
-	// }
-	// defer db.Close()
-
-	// repositorio := repositories.NovoRepositorioDeClientes(db)
-	// clientes, erro := repositories.Buscar(nomeOuNick)
+func BuscarOrdemServico(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Buscando ordem de serviço!"))
 }
 
-func BuscarCliente(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Buscando um cliente!"))
+func BuscarOrdensServicos(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Buscando ordens de serviços!"))
 }
 
-func AtualizarCliente(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Atualizando cliente!"))
+func AtualizarOrdemServico(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Atualizando ordem de serviço!!"))
 }
 
-func DeletarCliente(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Deletando cliente!"))
+func DeletarOrdemServico(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Deletando ordem de serviço!"))
 }

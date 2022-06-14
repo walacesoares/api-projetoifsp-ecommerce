@@ -7,33 +7,33 @@ import (
 
 var rotasTelefone = []Rota{
 	{
-		URI:                "/telefone",
+		URI:                "/telefones",
 		Metodo:             http.MethodPost,
-		Funcao:             controllers.CriarCliente,
+		Funcao:             controllers.CriarTelefone,
 		RequerAutenticacao: false,
 	},
 	{
-		URI:                "/telefone",
+		URI:                "/telefones",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarClientes,
+		Funcao:             controllers.BuscarTelefones,
 		RequerAutenticacao: false,
 	},
 	{
-		URI:                "/telefone/{telefoneId}",
+		URI:                "/telefones/{telefoneId}",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarClientes,
+		Funcao:             controllers.BuscarTelefones,
 		RequerAutenticacao: false,
 	},
 	{
-		URI:                "/telefone/{telefoneId}",
+		URI:                "/telefones/{telefoneId}",
 		Metodo:             http.MethodPut,
-		Funcao:             controllers.AtualizarCliente,
+		Funcao:             controllers.AtualizarTelefone,
 		RequerAutenticacao: false,
 	},
 	{
-		URI:                "/telefone/{telefoneId}",
+		URI:                "/telefones/{telefoneId}",
 		Metodo:             http.MethodDelete,
-		Funcao:             controllers.DeletarCliente,
+		Funcao:             controllers.DeletarTelefone,
 		RequerAutenticacao: false,
 	},
 }
