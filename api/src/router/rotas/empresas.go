@@ -13,12 +13,6 @@ var rotasEmpresa = []Rota{
 		RequerAutenticacao: false,
 	},
 	{
-		URI:                "/empresas",
-		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarEmpresas,
-		RequerAutenticacao: false,
-	},
-	{
 		URI:                "/empresas/{empresaId}",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.BuscarEmpresa,

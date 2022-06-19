@@ -12,12 +12,12 @@ var rotasEndereco = []Rota{
 		Funcao:             controllers.CriarEndereco,
 		RequerAutenticacao: false,
 	},
-	{
-		URI:                "/enderecos",
-		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarEnderecos,
-		RequerAutenticacao: false,
-	},
+	// {
+	// 	URI:                "/enderecos",
+	// 	Metodo:             http.MethodGet,
+	// 	Funcao:             controllers.BuscarEnderecos,
+	// 	RequerAutenticacao: false,
+	// },
 	{
 		URI:                "/enderecos/{enderecoId}",
 		Metodo:             http.MethodPut,

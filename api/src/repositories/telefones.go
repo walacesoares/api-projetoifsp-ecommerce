@@ -38,3 +38,59 @@ func (repository Telefones) Criar(telefone models.Telefone) (uint64, error) {
 
 	return uint64(ultimoIDInserido), nil
 }
+
+func (repository Telefones) BuscarPorID(IDTelefone uint64) (models.Telefone, error) {
+	linhas, erro := repository.db.Query(
+		"select  idtelefone, pessoal, residencial from telefone where id = ?",
+		IDTelefone,
+	)
+	if erro != nil {
+		return models.Telefone{}, erro
+	}
+
+	defer linhas.Close()
+
+	var telefone models.Telefone
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&telefone.IDTelefone,
+			&telefone.Pessoal,
+			&telefone.Residencial,
+		); erro != nil {
+			return models.Telefone{}, erro
+		}
+	}
+	return telefone, nil
+}
+
+func (repository Telefones) Atualizar(IDTelefone uint64, telefone models.Telefone) error {
+	statement, erro := repository.db.Prepare(
+		"update telefone set pessoal = ?, residencial = ? where id = ?",
+	)
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+
+	if _, erro := statement.Exec(telefone.Pessoal, telefone.Residencial, IDTelefone); erro != nil {
+		return erro
+	}
+
+	return nil
+}
+
+func (repositorio Telefones) Deletar(IDTelefone uint64) error {
+	statement, erro := repositorio.db.Prepare("delete from telefone where id = ?")
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+
+	if _, erro = statement.Exec(IDTelefone); erro != nil {
+		return erro
+	}
+	return nil
+}

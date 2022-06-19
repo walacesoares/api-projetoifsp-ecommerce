@@ -38,3 +38,60 @@ func (repository Empresas) Criar(empresa models.Empresa) (uint64, error) {
 
 	return uint64(ultimoIDInserido), nil
 }
+
+func (repository Empresas) BuscarPorID(IDEmpresa uint64) (models.Empresa, error) {
+	linhas, erro := repository.db.Query(
+		"select cnpj, razao_socal, nome_fantasia from empresa where id = ?",
+		IDEmpresa,
+	)
+	if erro != nil {
+		return models.Empresa{}, erro
+	}
+
+	defer linhas.Close()
+
+	var empresa models.Empresa
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&empresa.IDEmpresa,
+			&empresa.CNPJ,
+			&empresa.Razao_social,
+			&empresa.Nome_fantasia,
+		); erro != nil {
+			return models.Empresa{}, erro
+		}
+	}
+	return empresa, nil
+}
+
+func (repository Empresas) Atualizar(IDEmpresa uint64, empresa models.Empresa) error {
+	statement, erro := repository.db.Prepare(
+		"update empresa set cnpj = ?, razao_social = ?, nome_fantasia = ? where id = ?",
+	)
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+
+	if _, erro := statement.Exec(empresa.CNPJ, empresa.Razao_social, empresa.Nome_fantasia, IDEmpresa); erro != nil {
+		return erro
+	}
+
+	return nil
+}
+
+func (repositorio Empresas) Deletar(IDEmpresa uint64) error {
+	statement, erro := repositorio.db.Prepare("delete from empresa where id = ?")
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+
+	if _, erro = statement.Exec(IDEmpresa); erro != nil {
+		return erro
+	}
+	return nil
+}

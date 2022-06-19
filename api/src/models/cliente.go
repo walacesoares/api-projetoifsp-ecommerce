@@ -2,7 +2,7 @@ package models
 
 import "errors"
 
-//Usuario representa um usuário utilizando o sistema
+//Cliente representa um cliente utilizando o sistema
 type Cliente struct {
 	IDCliente uint64 `json:id_cliente,omitempty`
 	CPF       string `json:cpf,omitempty`

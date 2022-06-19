@@ -13,47 +13,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func CriarEmpresa(w http.ResponseWriter, r *http.Request) {
+func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
-	var empresa models.Empresa
-	if erro = json.Unmarshal(corpoRequest, &empresa); erro != nil {
+	var usuario models.Usuario
+	if erro = json.Unmarshal(corpoRequest, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
-	if erro = empresa.Preparar(); erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	defer db.Close()
-
-	repository := repositories.NovoRepositorioDeEmpresas(db)
-	empresa.IDEmpresa, erro = repository.Criar(empresa)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusCreated, empresa)
-}
-
-func BuscarEmpresa(w http.ResponseWriter, r *http.Request) {
-	parametros := mux.Vars(r)
-
-	empresaID, erro := strconv.ParseUint(parametros["empresaId"], 10, 64)
-	if erro != nil {
+	if erro = usuario.Preparar("cadastro"); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
@@ -66,18 +39,46 @@ func BuscarEmpresa(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	repository := repositories.NovoRepositorioDeEmpresas(db)
-	empresa, erro := repository.BuscarPorID(empresaID)
+	repository := repositories.NovoRepositorioDeUsuarios(db)
+	usuario.IDUsuario, erro = repository.Criar(usuario)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusCreated, usuario)
+}
+
+func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	defer db.Close()
+
+	repository := repositories.NovoRepositorioDeUsuarios(db)
+	usuario, erro := repository.BuscarPorID(usuarioID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 	}
 
-	respostas.JSON(w, http.StatusOK, empresa)
+	respostas.JSON(w, http.StatusOK, usuario)
+
 }
 
-func AtualizarEmpresa(w http.ResponseWriter, r *http.Request) {
+func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
-	empresaID, erro := strconv.ParseUint(parametros["empresaId"], 10, 64)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -89,13 +90,13 @@ func AtualizarEmpresa(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var empresa models.Empresa
-	if erro = json.Unmarshal(corpoRequisicao, &empresa); erro != nil {
+	var usuario models.Usuario
+	if erro = json.Unmarshal(corpoRequisicao, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
-	if erro = empresa.Preparar(); erro != nil {
+	if erro = usuario.Preparar("edição"); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
@@ -108,8 +109,8 @@ func AtualizarEmpresa(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	repository := repositories.NovoRepositorioDeEmpresas(db)
-	if erro = repository.Atualizar(empresaID, empresa); erro != nil {
+	repository := repositories.NovoRepositorioDeUsuarios(db)
+	if erro = repository.Atualizar(usuarioID, usuario); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
@@ -117,9 +118,9 @@ func AtualizarEmpresa(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-func DeletarEmpresa(w http.ResponseWriter, r *http.Request) {
+func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
-	empresaID, erro := strconv.ParseUint(parametros["empresaId"], 10, 64)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -128,8 +129,8 @@ func DeletarEmpresa(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	repository := repositories.NovoRepositorioDeEmpresas(db)
-	if erro = repository.Deletar(empresaID); erro != nil {
+	repository := repositories.NovoRepositorioDeUsuarios(db)
+	if erro = repository.Deletar(usuarioID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 	}
 
