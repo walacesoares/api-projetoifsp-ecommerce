@@ -21,7 +21,7 @@ var rotasTelefone = []Rota{
 	{
 		URI:                "/telefones/{telefoneId}",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarTelefones,
+		Funcao:             controllers.BuscarTelefone,
 		RequerAutenticacao: false,
 	},
 	{

@@ -16,7 +16,7 @@ func NovoRepositorioDeUsuarios(db *sql.DB) *Usuarios {
 
 func (repository Usuarios) Criar(usuario models.Usuario) (uint64, error) {
 	statement, erro := repository.db.Prepare(
-		"insert into usuario (nome, senha) values(?,?)",
+		"insert into usuario (nome, email, senha) values(?,?,?)",
 	)
 	if erro != nil {
 		return 0, erro
@@ -24,7 +24,7 @@ func (repository Usuarios) Criar(usuario models.Usuario) (uint64, error) {
 
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(usuario.Nome, usuario.Senha)
+	resultado, erro := statement.Exec(usuario.Nome, usuario.Email, usuario.Senha)
 	if erro != nil {
 		return 0, erro
 	}
@@ -39,7 +39,7 @@ func (repository Usuarios) Criar(usuario models.Usuario) (uint64, error) {
 
 func (repository Usuarios) BuscarPorID(IDUsuario uint64) (models.Usuario, error) {
 	linhas, erro := repository.db.Query(
-		"select id, nome, email from usuario where id = ?",
+		"select idusuario, nome, email from usuario where idusuario = ?",
 		IDUsuario,
 	)
 	if erro != nil {
@@ -64,7 +64,7 @@ func (repository Usuarios) BuscarPorID(IDUsuario uint64) (models.Usuario, error)
 
 func (repository Usuarios) Atualizar(IDUsuario uint64, usuario models.Usuario) error {
 	statement, erro := repository.db.Prepare(
-		"update usuarios set nome = ?, email = ? where id = ?",
+		"update usuario set nome = ?, email = ? where idusuario = ?",
 	)
 	if erro != nil {
 		return erro
@@ -80,7 +80,7 @@ func (repository Usuarios) Atualizar(IDUsuario uint64, usuario models.Usuario) e
 }
 
 func (repositorio Usuarios) Deletar(IDUsuario uint64) error {
-	statement, erro := repositorio.db.Prepare("delete from usuarios where id = ?")
+	statement, erro := repositorio.db.Prepare("delete from usuario where idusuario = ?")
 	if erro != nil {
 		return erro
 	}
@@ -94,8 +94,8 @@ func (repositorio Usuarios) Deletar(IDUsuario uint64) error {
 }
 
 func (repository Usuarios) BuscarPorEmail(email string) (models.Usuario, error) {
-	linha, erro := repository.db.Query("select id, senha from usuarios where email = ?", email)
-	if erro == nil {
+	linha, erro := repository.db.Query("select idusuario, senha from usuario where email = ?", email)
+	if erro != nil {
 		return models.Usuario{}, erro
 	}
 	defer linha.Close()

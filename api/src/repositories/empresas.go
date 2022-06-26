@@ -41,7 +41,7 @@ func (repository Empresas) Criar(empresa models.Empresa) (uint64, error) {
 
 func (repository Empresas) BuscarPorID(IDEmpresa uint64) (models.Empresa, error) {
 	linhas, erro := repository.db.Query(
-		"select cnpj, razao_socal, nome_fantasia from empresa where id = ?",
+		"select idempresa,cnpJ, razao_social, nome_fantasia, idusuario from empresa where idempresa = ?",
 		IDEmpresa,
 	)
 	if erro != nil {
@@ -58,6 +58,7 @@ func (repository Empresas) BuscarPorID(IDEmpresa uint64) (models.Empresa, error)
 			&empresa.CNPJ,
 			&empresa.Razao_social,
 			&empresa.Nome_fantasia,
+			&empresa.IDUsuario,
 		); erro != nil {
 			return models.Empresa{}, erro
 		}
@@ -67,7 +68,7 @@ func (repository Empresas) BuscarPorID(IDEmpresa uint64) (models.Empresa, error)
 
 func (repository Empresas) Atualizar(IDEmpresa uint64, empresa models.Empresa) error {
 	statement, erro := repository.db.Prepare(
-		"update empresa set cnpj = ?, razao_social = ?, nome_fantasia = ? where id = ?",
+		"update empresa set cnpj = ?, razao_social = ?, nome_fantasia = ? where idempresa = ?",
 	)
 	if erro != nil {
 		return erro
@@ -83,7 +84,7 @@ func (repository Empresas) Atualizar(IDEmpresa uint64, empresa models.Empresa) e
 }
 
 func (repositorio Empresas) Deletar(IDEmpresa uint64) error {
-	statement, erro := repositorio.db.Prepare("delete from empresa where id = ?")
+	statement, erro := repositorio.db.Prepare("delete from empresa where idempresa = ?")
 	if erro != nil {
 		return erro
 	}
