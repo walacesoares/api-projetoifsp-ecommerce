@@ -75,9 +75,9 @@ func BuscarOrdemServico(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusOK, ordemServico)
 }
 
-// func BuscarOrdensServicos(w http.ResponseWriter, r *http.Request) {
-// 	w.Write([]byte("Buscando ordens de serviços!"))
-// }
+func BuscarOrdensServicos(w http.ResponseWriter, r *http.Request) {
+
+}
 
 // func AtualizarOrdemServico(w http.ResponseWriter, r *http.Request) {
 // 	parametros := mux.Vars(r)

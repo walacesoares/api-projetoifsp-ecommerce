@@ -14,6 +14,7 @@ type Usuario struct {
 	Nome      string `json:"nome,omitempty"`
 	Email     string `json:"email,omitempty"`
 	Senha     string `json:"senha,omitempty"`
+	CPF       string `json:"cpf,omitempty"`
 }
 
 func (usuario *Usuario) Preparar(etapa string) error {
@@ -42,12 +43,17 @@ func (usuario *Usuario) validar(etapa string) error {
 	if etapa == "cadastro" && usuario.Senha == "" {
 		return errors.New("A senha é obrigatório e não pode ser em branco!")
 	}
+	if usuario.CPF == "" {
+		return errors.New("O CPF é obrigatório e não pode ser em branco!")
+	}
+
 	return nil
 }
 
 func (usuario *Usuario) formatar(etapa string) error {
 	usuario.Nome = strings.TrimSpace(usuario.Nome)
 	usuario.Email = strings.TrimSpace(usuario.Email)
+	usuario.CPF = strings.TrimSpace(usuario.CPF)
 
 	if etapa == "cadastro" {
 		senhaComHash, erro := seguranca.Hash(usuario.Senha)

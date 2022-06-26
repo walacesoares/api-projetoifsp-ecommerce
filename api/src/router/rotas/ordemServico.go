@@ -7,33 +7,33 @@ import (
 
 var rotasOrdemServico = []Rota{
 	{
-		URI:                "/ordensservicos",
+		URI:                "/criarordemservico",
 		Metodo:             http.MethodPost,
 		Funcao:             controllers.CriarOrdemServico,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
-	// {
-	// 	URI:                "/ordensservicos",
-	// 	Metodo:             http.MethodGet,
-	// 	Funcao:             controllers.BuscarOrdensServicos,
-	// 	RequerAutenticacao: false,
-	// },
 	{
-		URI:                "/ordensservico/{ordensservico}",
+		URI:                "/buscarordensservicos",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarOrdensServicos,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/buscarordemservico/{ordensservicoId}",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.BuscarOrdemServico,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 	// {
 	// 	URI:                "/ordensservico/{ordensservicoId}",
 	// 	Metodo:             http.MethodPut,
 	// 	Funcao:             controllers.AtualizarOrdemServico,
-	// 	RequerAutenticacao: false,
+	// 	RequerAutenticacao: true,
 	// },
 	{
-		URI:                "/ordensservico/{ordensservicoId}",
+		URI:                "/deletarordemservico/{ordensservicoId}",
 		Metodo:             http.MethodDelete,
 		Funcao:             controllers.DeletarOrdemServico,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 }

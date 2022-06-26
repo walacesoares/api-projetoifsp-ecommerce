@@ -16,7 +16,7 @@ func NovoRepositorioDeUsuarios(db *sql.DB) *Usuarios {
 
 func (repository Usuarios) Criar(usuario models.Usuario) (uint64, error) {
 	statement, erro := repository.db.Prepare(
-		"insert into usuario (nome, email, senha) values(?,?,?)",
+		"insert into usuario (nome, email, senha, cpf) values(?,?,?,?)",
 	)
 	if erro != nil {
 		return 0, erro
@@ -24,7 +24,7 @@ func (repository Usuarios) Criar(usuario models.Usuario) (uint64, error) {
 
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(usuario.Nome, usuario.Email, usuario.Senha)
+	resultado, erro := statement.Exec(usuario.Nome, usuario.Email, usuario.Senha, usuario.CPF)
 	if erro != nil {
 		return 0, erro
 	}
@@ -39,7 +39,7 @@ func (repository Usuarios) Criar(usuario models.Usuario) (uint64, error) {
 
 func (repository Usuarios) BuscarPorID(IDUsuario uint64) (models.Usuario, error) {
 	linhas, erro := repository.db.Query(
-		"select idusuario, nome, email from usuario where idusuario = ?",
+		"select idusuario, nome, email, cpf from usuario where idusuario = ?",
 		IDUsuario,
 	)
 	if erro != nil {
@@ -55,6 +55,7 @@ func (repository Usuarios) BuscarPorID(IDUsuario uint64) (models.Usuario, error)
 			&usuario.IDUsuario,
 			&usuario.Nome,
 			&usuario.Email,
+			&usuario.CPF,
 		); erro != nil {
 			return models.Usuario{}, erro
 		}
