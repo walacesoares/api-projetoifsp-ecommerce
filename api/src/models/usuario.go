@@ -43,7 +43,7 @@ func (usuario *Usuario) validar(etapa string) error {
 	if etapa == "cadastro" && usuario.Senha == "" {
 		return errors.New("A senha é obrigatório e não pode ser em branco!")
 	}
-	if usuario.CPF == "" {
+	if etapa == "cadastro" && usuario.CPF == "" {
 		return errors.New("O CPF é obrigatório e não pode ser em branco!")
 	}
 
