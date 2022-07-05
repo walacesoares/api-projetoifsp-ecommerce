@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"api/src/autenticacao"
 	"api/src/banco"
 	"api/src/models"
 	"api/src/repositories"
 	"api/src/respostas"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -14,6 +16,12 @@ import (
 )
 
 func CriarEndereco(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	empresaID, erro := strconv.ParseUint(parametros["empresaId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
@@ -26,10 +34,23 @@ func CriarEndereco(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if erro = endereco.Preparar(); erro != nil {
-	// 	respostas.Erro(w, http.StatusBadRequest, erro)
-	// 	return
-	// }
+	if erro = endereco.Preparar(); erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	empresaIDNoToken, erro := autenticacao.ExtrairEmpresaID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if empresaID != empresaIDNoToken {
+		respostas.Erro(w, http.StatusForbidden, errors.New("não é possível criar um endereço que não seja para você"))
+		return
+	}
+
+	endereco.IDEmpresa = empresaID
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -77,7 +98,7 @@ func BuscarEndereco(w http.ResponseWriter, r *http.Request) {
 
 func AtualizarEndereco(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
-	enderecoID, erro := strconv.ParseUint(parametros["enderecoId"], 10, 64)
+	empresaID, erro := strconv.ParseUint(parametros["empresaId"], 10, 64)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -100,6 +121,19 @@ func AtualizarEndereco(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	empresaIDNoToken, erro := autenticacao.ExtrairEmpresaID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if empresaID != empresaIDNoToken {
+		respostas.Erro(w, http.StatusForbidden, errors.New("não é possível criar um endereço que não seja para você"))
+		return
+	}
+
+	endereco.IDEmpresa = empresaID
+
 	db, erro := banco.Conectar()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -109,7 +143,7 @@ func AtualizarEndereco(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repository := repositories.NovoRepositorioDeEnderecos(db)
-	if erro = repository.Atualizar(enderecoID, endereco); erro != nil {
+	if erro = repository.Atualizar(empresaID, endereco); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}

@@ -7,27 +7,27 @@ import (
 
 var rotasEndereco = []Rota{
 	{
-		URI:                "/enderecos",
+		URI:                "/criarendereco",
 		Metodo:             http.MethodPost,
 		Funcao:             controllers.CriarEndereco,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
-	// {
-	// 	URI:                "/enderecos",
-	// 	Metodo:             http.MethodGet,
-	// 	Funcao:             controllers.BuscarEnderecos,
-	// 	RequerAutenticacao: false,
-	// },
 	{
-		URI:                "/enderecos/{enderecoId}",
+		URI:                "/buscarendereco",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarEndereco,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/atualizarendereco/{enderecoId}",
 		Metodo:             http.MethodPut,
 		Funcao:             controllers.AtualizarEndereco,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/enderecos/{enderecoId}",
+		URI:                "/deletarendereco/{enderecoId}",
 		Metodo:             http.MethodDelete,
 		Funcao:             controllers.DeletarEndereco,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 }

@@ -18,7 +18,7 @@ func NovoRepositorioDeTelefones(db *sql.DB) *Telefones {
 //Criar insere um telefone no banco de dados
 func (repository Telefones) Criar(telefone models.Telefone) (uint64, error) {
 	statement, erro := repository.db.Prepare(
-		"insert into telefone (pessoal,residencial,idcliente,idempresa) values(?,?,?,?)",
+		"insert into telefone (pessoal,residencial,idempresa) values(?,?,?)",
 	)
 	if erro != nil {
 		return 0, erro
@@ -26,7 +26,7 @@ func (repository Telefones) Criar(telefone models.Telefone) (uint64, error) {
 
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(telefone.Pessoal, telefone.Residencial, telefone.IDCliente, telefone.IDEmpresa)
+	resultado, erro := statement.Exec(telefone.Pessoal, telefone.Residencial, telefone.IDEmpresa)
 	if erro != nil {
 		return 0, erro
 	}
@@ -41,7 +41,7 @@ func (repository Telefones) Criar(telefone models.Telefone) (uint64, error) {
 
 func (repository Telefones) BuscarPorID(IDTelefone uint64) (models.Telefone, error) {
 	linhas, erro := repository.db.Query(
-		"select  idtelefone, pessoal, residencial from telefone where id = ?",
+		"select  idtelefone, pessoal, residencial from telefone where idtelefone = ?",
 		IDTelefone,
 	)
 	if erro != nil {
@@ -66,7 +66,7 @@ func (repository Telefones) BuscarPorID(IDTelefone uint64) (models.Telefone, err
 
 func (repository Telefones) Atualizar(IDTelefone uint64, telefone models.Telefone) error {
 	statement, erro := repository.db.Prepare(
-		"update telefone set pessoal = ?, residencial = ? where id = ?",
+		"update telefone set pessoal = ?, residencial = ? where idtelefone = ?",
 	)
 	if erro != nil {
 		return erro

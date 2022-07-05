@@ -9,7 +9,6 @@ type Endereco struct {
 	Cidade     string `json:cidade,omitempty`
 	Bairro     string `json:bairro,omitempty`
 	Estado     string `json:estado,omitempty`
-	IDCliente  uint64 `json:id_cliente `
 	IDEmpresa  uint64 `json:id_empresa`
 }
 

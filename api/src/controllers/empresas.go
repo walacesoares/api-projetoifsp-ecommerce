@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"api/src/autenticacao"
 	"api/src/banco"
 	"api/src/models"
 	"api/src/repositories"
@@ -73,6 +74,30 @@ func BuscarEmpresa(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respostas.JSON(w, http.StatusOK, empresa)
+}
+
+func BuscarEmpresas(w http.ResponseWriter, r *http.Request) {
+	empresaID, erro := autenticacao.ExtrairEmpresaID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	defer db.Close()
+
+	repository := repositories.NovoRepositorioDeEmpresas(db)
+	empresas, erro := repository.Buscar(empresaID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+	}
+
+	respostas.JSON(w, http.StatusOK, empresas)
 }
 
 func AtualizarEmpresa(w http.ResponseWriter, r *http.Request) {

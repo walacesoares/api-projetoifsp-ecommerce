@@ -66,6 +66,33 @@ func (repository Empresas) BuscarPorID(IDEmpresa uint64) (models.Empresa, error)
 	return empresa, nil
 }
 
+func (repository Empresas) Buscar(empresaID uint64) ([]models.Empresa, error) {
+	linhas, erro := repository.db.Query(
+		"select idempresa, cnpj, razao_social, nome_fantasia from empresa",
+	)
+	if erro != nil {
+		return []models.Empresa{}, erro
+	}
+
+	defer linhas.Close()
+
+	var empresas []models.Empresa
+
+	for linhas.Next() {
+		var empresa models.Empresa
+		if erro = linhas.Scan(
+			&empresa.IDEmpresa,
+			&empresa.CNPJ,
+			&empresa.Razao_social,
+			&empresa.Nome_fantasia,
+		); erro != nil {
+			return nil, erro
+		}
+		empresas = append(empresas, empresa)
+	}
+	return empresas, nil
+}
+
 func (repository Empresas) Atualizar(IDEmpresa uint64, empresa models.Empresa) error {
 	statement, erro := repository.db.Prepare(
 		"update empresa set cnpj = ?, razao_social = ?, nome_fantasia = ? where idempresa = ?",

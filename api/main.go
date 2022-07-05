@@ -1,7 +1,6 @@
 package main
 
 import (
-	"api/src/banco"
 	"api/src/config"
 	"api/src/router"
 	"fmt"
@@ -12,7 +11,7 @@ import (
 func main() {
 
 	config.Carregar()
-	banco.Init()
+	// banco.Init()
 	r := router.Gerar()
 
 	fmt.Printf("Escutando na porta %d ", config.Porta)

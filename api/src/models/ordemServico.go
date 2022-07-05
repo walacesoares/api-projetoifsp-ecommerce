@@ -9,9 +9,8 @@ type OrdemServico struct {
 	Custo          string `json:custo,omitempty`
 	Prazo          string `json:prazo,omitempty`
 	Descricao      string `json:descricao,omitempty`
-	IDCliente      uint64 `json:id_cliente,omitempty`
-	IDServico      uint64 `json:id_servico,omitempty`
-	IDOrcamento    uint64 `json:id_orcamento,omitempty`
+	IDUsuario      uint64 `json:id_usuario,omitempty`
+	IDEmpresa      uint64 `json:id_empresa,omitempty`
 }
 
 func (ordemServico *OrdemServico) Preparar() error {
@@ -36,6 +35,13 @@ func (ordemServico *OrdemServico) validar() error {
 	}
 	if ordemServico.Descricao == "" {
 		return errors.New("A descrição é obrigatório e não pode ser em branco!")
+	}
+	if ordemServico.IDUsuario == 0 {
+		return errors.New("O ID do usuário é obrigatório e não pode ser em branco!")
+
+	}
+	if ordemServico.IDEmpresa == 0 {
+		return errors.New("O ID da empresa é obrigatório e não pode ser em branco!")
 	}
 
 	return nil

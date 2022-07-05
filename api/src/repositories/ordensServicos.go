@@ -18,7 +18,7 @@ func NovoRepositorioDeOrdensServicos(db *sql.DB) *OrdensServicos {
 //Criar insere uma ordem de serviço no banco de dados
 func (repository OrdensServicos) Criar(ordemServico models.OrdemServico) (uint64, error) {
 	statement, erro := repository.db.Prepare(
-		"insert into ordemservico (nome,custo,prazo,descricao,idcliente,idservico,idorcamento) values(?,?,?,?,?,?,?)",
+		"insert into ordemservico (nome,custo,prazo,descricao,idusuario,idempresa) values(?,?,?,?,?,?)",
 	)
 	if erro != nil {
 		return 0, erro
@@ -26,7 +26,7 @@ func (repository OrdensServicos) Criar(ordemServico models.OrdemServico) (uint64
 
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(ordemServico.Nome, ordemServico.Custo, ordemServico.Custo, ordemServico.Descricao, ordemServico.IDCliente)
+	resultado, erro := statement.Exec(ordemServico.Nome, ordemServico.Custo, ordemServico.Custo, ordemServico.Descricao, ordemServico.IDUsuario, ordemServico.IDEmpresa)
 	if erro != nil {
 		return 0, erro
 	}
@@ -41,7 +41,7 @@ func (repository OrdensServicos) Criar(ordemServico models.OrdemServico) (uint64
 
 func (repository OrdensServicos) BuscarPorID(IDOrdemServico uint64) (models.OrdemServico, error) {
 	linhas, erro := repository.db.Query(
-		"select idordemservico, nome, tipo, custo, prazo, descricao from ordemservico where id = ?",
+		"select idordemservico, nome, tipo, custo, prazo, descricao from ordemservico where idordemservico = ?",
 		IDOrdemServico,
 	)
 	if erro != nil {
@@ -68,7 +68,7 @@ func (repository OrdensServicos) BuscarPorID(IDOrdemServico uint64) (models.Orde
 }
 
 func (repositorio OrdensServicos) Deletar(IDOrdemServico uint64) error {
-	statement, erro := repositorio.db.Prepare("delete from ordemservico where id = ?")
+	statement, erro := repositorio.db.Prepare("delete from ordemservico where idordemservico = ?")
 	if erro != nil {
 		return erro
 	}

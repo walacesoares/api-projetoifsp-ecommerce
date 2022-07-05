@@ -110,3 +110,36 @@ func (repository Usuarios) BuscarPorEmail(email string) (models.Usuario, error) 
 	}
 	return usuario, nil
 }
+
+func (repository Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
+	linha, erro := repository.db.Query("select senha from usuario where idusuario = ?", usuarioID)
+	if erro != nil {
+		return "", erro
+	}
+	defer linha.Close()
+
+	var usuario models.Usuario
+
+	if linha.Next() {
+		if erro = linha.Scan(&usuario.Senha); erro != nil {
+			return "", erro
+		}
+	}
+
+	return usuario.Senha, nil
+}
+
+func (repository Usuarios) AtualizarSenha(usuarioID uint64, senha string) error {
+	statement, erro := repository.db.Prepare("update usuario set senha = ? where idusuario= ?")
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+
+	if _, erro = statement.Exec(senha, usuarioID); erro != nil {
+		return erro
+	}
+
+	return nil
+}

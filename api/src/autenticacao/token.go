@@ -72,3 +72,64 @@ func retornarChaveDeVerificacao(token *jwt.Token) (interface{}, error) {
 
 	return config.SecretKey, nil
 }
+
+func CriarTokenEmpresa(empresaID uint64) (string, error) {
+	permissoes := jwt.MapClaims{}
+	permissoes["authorized"] = true
+	permissoes["exp"] = time.Now().Add(time.Hour * 6).Unix()
+	permissoes["empresaId"] = empresaID
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
+
+	return token.SignedString([]byte(config.SecretKey))
+}
+
+func ValidarTokenEmpresa(r *http.Request) error {
+	tokenString := extrairTokenEmpresa(r)
+	token, erro := jwt.Parse(tokenString, retornarChaveDeVerificacaoEmpresa)
+	if erro != nil {
+		return erro
+	}
+
+	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return nil
+	}
+
+	return errors.New("Token inválido")
+}
+
+func ExtrairEmpresaID(r *http.Request) (uint64, error) {
+	tokenString := extrairTokenEmpresa(r)
+	token, erro := jwt.Parse(tokenString, retornarChaveDeVerificacaoEmpresa)
+	if erro != nil {
+		return 0, erro
+	}
+
+	if permissoes, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		empresaID, erro := strconv.ParseUint(fmt.Sprintf("%0.f", permissoes["empresaId"]), 10, 64)
+		if erro != nil {
+			return 0, erro
+		}
+
+		return empresaID, nil
+	}
+
+	return 0, errors.New("Token inválido")
+}
+
+func extrairTokenEmpresa(r *http.Request) string {
+	token := r.Header.Get("Authorization")
+
+	if len(strings.Split(token, " ")) == 2 {
+		return strings.Split(token, " ")[1]
+	}
+
+	return ""
+}
+
+func retornarChaveDeVerificacaoEmpresa(token *jwt.Token) (interface{}, error) {
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf("Método de assinatura inesperado! %v", token.Header["alg"])
+	}
+
+	return config.SecretKey, nil
+}

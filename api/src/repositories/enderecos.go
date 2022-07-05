@@ -18,7 +18,7 @@ func NovoRepositorioDeEnderecos(db *sql.DB) *Enderecos {
 //Criar insere um endereco no banco de dados
 func (repository Enderecos) Criar(endereco models.Endereco) (uint64, error) {
 	statement, erro := repository.db.Prepare(
-		"insert into endereco (rua, numero, cidade, bairro, estado, idcliente, idempresa) values(?,?,?,?,?,?,?)",
+		"insert into endereco (rua, numero, cidade, bairro, estado, idempresa) values(?,?,?,?,?,?)",
 	)
 	if erro != nil {
 		return 0, erro
@@ -26,7 +26,7 @@ func (repository Enderecos) Criar(endereco models.Endereco) (uint64, error) {
 
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(endereco.Rua, endereco.Numero, endereco.Cidade, endereco.Bairro, endereco.Estado, endereco.IDCliente, endereco.IDEmpresa)
+	resultado, erro := statement.Exec(endereco.Rua, endereco.Numero, endereco.Cidade, endereco.Bairro, endereco.Estado, endereco.IDEmpresa)
 	if erro != nil {
 		return 0, erro
 	}
@@ -41,7 +41,7 @@ func (repository Enderecos) Criar(endereco models.Endereco) (uint64, error) {
 
 func (repository Enderecos) BuscarPorID(IDEndereco uint64) (models.Endereco, error) {
 	linhas, erro := repository.db.Query(
-		"select id, rua, numero, cidade, bairro, estado from endereco where id = ?",
+		"select idendereco, rua, numero, cidade, bairro, estado from endereco where idendereco = ?",
 		IDEndereco,
 	)
 	if erro != nil {

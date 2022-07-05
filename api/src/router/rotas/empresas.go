@@ -7,27 +7,33 @@ import (
 
 var rotasEmpresa = []Rota{
 	{
-		URI:                "/empresas",
+		URI:                "/criarempresa",
 		Metodo:             http.MethodPost,
 		Funcao:             controllers.CriarEmpresa,
 		RequerAutenticacao: false,
 	},
 	{
-		URI:                "/empresas/{empresaId}",
+		URI:                "/buscarempresa/{empresaId}",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.BuscarEmpresa,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/empresas/{empresaId}",
+		URI:                "/buscarempresas",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarEmpresas,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/atualizarempresa/{empresaId}",
 		Metodo:             http.MethodPut,
 		Funcao:             controllers.AtualizarEmpresa,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/empresas/{empresaId}",
+		URI:                "/deletarempresa/{empresaId}",
 		Metodo:             http.MethodDelete,
 		Funcao:             controllers.DeletarEmpresa,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 }
