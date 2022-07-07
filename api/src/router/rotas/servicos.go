@@ -9,13 +9,19 @@ var rotasServico = []Rota{
 	{
 		URI:                "/criarservico",
 		Metodo:             http.MethodPost,
-		Funcao:             controllers.CreateServicoEndpoint,
+		Funcao:             controllers.CreateServico,
 		RequerAutenticacao: false,
 	},
 	{
 		URI:                "/buscarservico/{servicoId}",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.GetServicoEndpoint,
+		RequerAutenticacao: false,
+	},
+	{
+		URI:                "/buscarservicos",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.GetServicosEndpoint,
 		RequerAutenticacao: false,
 	},
 	{

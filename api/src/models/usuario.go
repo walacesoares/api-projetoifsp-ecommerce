@@ -14,7 +14,7 @@ type Usuario struct {
 	Nome      string `json:"nome,omitempty"`
 	Email     string `json:"email,omitempty"`
 	Senha     string `json:"senha,omitempty"`
-	CPF       string `json:"cpf,omitempty"`
+	CPF       string `json:"cpf"`
 }
 
 func (usuario *Usuario) Preparar(etapa string) error {
@@ -43,9 +43,9 @@ func (usuario *Usuario) validar(etapa string) error {
 	if etapa == "cadastro" && usuario.Senha == "" {
 		return errors.New("A senha é obrigatório e não pode ser em branco!")
 	}
-	if etapa == "cadastro" && usuario.CPF == "" {
-		return errors.New("O CPF é obrigatório e não pode ser em branco!")
-	}
+	// if etapa == "cadastro" && usuario.CPF == "" {
+	// 	return errors.New("O CPF é obrigatório e não pode ser em branco!")
+	// }
 
 	return nil
 }
