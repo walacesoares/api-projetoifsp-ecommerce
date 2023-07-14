@@ -19,7 +19,7 @@ func main() {
 
 	config.Carregar()
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.ctsu4.mongodb.net/?retryWrites=true&w=majority")
+	clientOptions := options.Client().ApplyURI("")
 	client, _ = mongo.Connect(ctx, clientOptions)
 	r := router.Gerar()
 
